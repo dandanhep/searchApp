@@ -1,34 +1,38 @@
-import React, { useState } from "react"; // Importing React and useState from the "react" package
-import SearchForm from "./components/SearchForm"; // Importing the SearchForm component
-import SearchResults from "./components/SearchResults"; // Importing the SearchResults component
-import FavoritesList from "./components/FavoritesList"; // Importing the FavoritesList component
-import "./App.css"; // Importing the App CSS file
+import React, { useState } from "react";
+import SearchForm from "./components/SearchForm";
+import SearchResults from "./components/SearchResults";
+import FavoritesList from "./components/FavoritesList";
+import "./App.css";
 
 function App() {
-  const [searchTerm, setSearchTerm] = useState(""); // Initializing the searchTerm state as an empty string using the useState hook
-  const [searchMedia, setSearchMedia] = useState("all"); // Initializing the searchMedia state with a default value of "all"
-  const [searchCountry, setSearchCountry] = useState("US"); // Initializing the searchCountry state with a default value of "US"
-  const [favorites, setFavorites] = useState([]); // Initializing the favorites state as an empty array using the useState hook
+  // Initializing state variables using the useState hook
+  const [searchTerm, setSearchTerm] = useState("");
+  const [searchMedia, setSearchMedia] = useState("all");
+  const [searchCountry, setSearchCountry] = useState("US");
+  const [favorites, setFavorites] = useState([]);
 
+  // Function to handle the search action
   const handleSearch = (term, media, country) => {
+    // Updates the searchTerm, searchMedia, and searchCountry states with the provided values
     setSearchTerm(term);
     setSearchMedia(media);
     setSearchCountry(country);
   };
-  // Function to handle the search action
-  // Updates the searchTerm, searchMedia, and searchCountry states with the provided values
 
+  // Function to handle adding an item to favorites
   const handleAddToFavorites = (item) => {
+    // Updates the favorites state by adding the item to the existing array using the spread operator
     setFavorites([...favorites, item]);
   };
-  // Function to handle adding an item to favorites
-  // Updates the favorites state by adding the item to the existing array using the spread operator
 
   return (
     <div className="container">
       <h1>iTunes Search</h1>
+      {/* SearchForm component to get search inputs */}
       <SearchForm onSearch={handleSearch} />
       <div className="results-container">
+        {/* SearchResults component to display search results */}
+        {/* Passes search term, media, country, and handleAddToFavorites function as props */}
         <SearchResults
           term={searchTerm}
           media={searchMedia}
@@ -37,15 +41,11 @@ function App() {
         />
       </div>
       <h2>Favorites</h2>
+      {/* FavoritesList component to display the list of favorite items */}
+      {/* Passes favorites state as a prop */}
       <FavoritesList favorites={favorites} />
     </div>
   );
 }
-// Main App component
-// Renders the container div with the app title, SearchForm, SearchResults, and FavoritesList components
-// Manages the searchTerm, searchMedia, searchCountry, and favorites states
-// Passes the handleSearch function to the SearchForm component as a prop
-// Passes the search term, media, country, and handleAddToFavorites function to the SearchResults component as props
-// Passes the favorites state to the FavoritesList component as a prop
 
 export default App;
