@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from "axios";
 import SearchForm from "./components/SearchForm";
 import SearchResults from "./components/SearchResults";
 import FavoritesList from "./components/FavoritesList";
@@ -12,11 +13,26 @@ function App() {
   const [favorites, setFavorites] = useState([]);
 
   // Function to handle the search action
-  const handleSearch = (term, media, country) => {
-    // Updates the searchTerm, searchMedia, and searchCountry states with the provided values
-    setSearchTerm(term);
-    setSearchMedia(media);
-    setSearchCountry(country);
+  const handleSearch = async (term, media, country) => {
+    try {
+      // Make a POST request to your backend API
+      const response = await axios.post("/api/search", {
+        term,
+        media,
+        country,
+      });
+
+      // Assuming your API returns data in response.data, you can handle it accordingly
+      console.log(response.data);
+      // Further processing of the API response and updating the state, etc.
+
+      // Update the state with the search parameters
+      setSearchTerm(term);
+      setSearchMedia(media);
+      setSearchCountry(country);
+    } catch (error) {
+      console.error("Error fetching search results:", error);
+    }
   };
 
   // Function to handle adding an item to favorites
@@ -29,7 +45,12 @@ function App() {
     <div className="container">
       <h1>iTunes Search</h1>
       {/* SearchForm component to get search inputs */}
-      <SearchForm onSearch={handleSearch} />
+      <SearchForm
+        term={searchTerm}
+        media={searchMedia}
+        country={searchCountry}
+        onSearch={handleSearch}
+      />
       <div className="results-container">
         {/* SearchResults component to display search results */}
         {/* Passes search term, media, country, and handleAddToFavorites function as props */}
@@ -38,6 +59,7 @@ function App() {
           media={searchMedia}
           country={searchCountry}
           onAddToFavorites={handleAddToFavorites}
+          onSearch={handleSearch}
         />
       </div>
       <h2>Favorites</h2>

@@ -1,6 +1,7 @@
 const express = require("express");
 const axios = require("axios");
 const helmet = require("helmet");
+const bodyParser = require("body-parser"); // Import bodyParser for parsing request bodies
 
 // Creating an instance of the Express application
 const app = express();
@@ -8,6 +9,9 @@ const port = 3001; // Setting the port number for the server to listen on
 
 // Using the Helmet middleware to enhance security
 app.use(helmet());
+
+// Using bodyParser middleware to parse request bodies as JSON
+app.use(bodyParser.json());
 
 // Serving static files from the "client/build" directory
 app.use(express.static("client/build"));
