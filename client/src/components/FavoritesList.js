@@ -1,14 +1,14 @@
 import React, { useState } from "react"; // Importing React and useState hook from the "react" package
 import axios from "axios"; // Importing the Axios library for making HTTP requests
 
-function FavoritesList() {
-  const [favorites, setFavorites] = useState([]); // Initializing the favorites state as an empty array using the useState hook
-
+function FavoritesList({ favorites }) {
   const handleRemoveFromFavorites = (item) => {
     axios
-      .delete(`/api/favorites/${item.id}`)
+      .delete(`/api/favorites/${item.trackId}`)
       .then(() => {
-        setFavorites(favorites.filter((favorite) => favorite.id !== item.id));
+        setFavorites(
+          favorites.filter((favorite) => favorite.trackId !== item.trackId)
+        );
       })
       .catch((error) => {
         console.error("Error removing item from favorites:", error);
@@ -25,7 +25,7 @@ function FavoritesList() {
       {favorites.map((favorite) => (
         <div key={favorite.trackId}>
           <h2>{favorite.trackName}</h2>
-          {/* Display other relevant information */}
+
           <button onClick={() => handleRemoveFromFavorites(favorite)}>
             Remove
           </button>

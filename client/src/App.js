@@ -63,9 +63,9 @@ function App() {
         />
       </div>
       <h2>Favorites</h2>
-      {/* FavoritesList component to display the list of favorite items */}
-      {/* Passes favorites state as a prop */}
-      <FavoritesList favorites={favorites} />
+      {/* FavoritesList component */}
+      <FavoritesList favorites={favorites} />{" "}
+      {/* Pass favorites state as a prop */}
     </div>
   );
 }

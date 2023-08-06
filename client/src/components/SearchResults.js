@@ -16,7 +16,14 @@ const SearchResults = ({
     e.preventDefault();
     setLoading(true);
     try {
-      await onSearch(term, media, country);
+      const response = await axios.get("/api/search", {
+        params: {
+          term,
+          media,
+          country,
+        },
+      });
+      setResults(response.data.results); // Update the state with the search results
       setError(null); // Clear previous errors if the API request is successful
     } catch (error) {
       setError("Error fetching search results. Please try again later.");
