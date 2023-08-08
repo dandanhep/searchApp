@@ -1,7 +1,7 @@
-import React, { useState } from "react"; // Importing React and useState hook from the "react" package
-import axios from "axios"; // Importing the Axios library for making HTTP requests
+import React from "react";
+import axios from "axios";
 
-function FavoritesList({ favorites }) {
+function FavoritesList({ favorites, setFavorites }) {
   const handleRemoveFromFavorites = (item) => {
     axios
       .delete(`/api/favorites/${item.trackId}`)
