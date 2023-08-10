@@ -1,74 +1,54 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-const SearchResults = ({
-  term,
-  media,
-  country,
-  onAddToFavorites,
-  onSearch,
-}) => {
-  const [loading, setLoading] = useState(false);
+// SearchResults component takes in search inputs and onAddToFavorites function as props
+const SearchResults = ({ term, media, country, onAddToFavorites }) => {
+  // State variables to manage search results and error messages
   const [error, setError] = useState(null);
   const [results, setResults] = useState([]);
 
+  // Function to handle search form submission
   const handleSearchSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
+    e.preventDefault(); // Prevents default form submission behavior
+
     try {
-      const response = await axios.get("/api/search", {
-        params: {
-          term,
-          media,
-          country,
-        },
+      // Make a POST request to the backend API to fetch search results
+      const response = await axios.post("/api/search", {
+        term,
+        media,
+        country,
       });
-      setResults(response.data.results); // Update the state with the search results
-      setError(null); // Clear previous errors if the API request is successful
+
+      // Update the results state with the fetched search results
+      setResults(response.data.results);
+      setError(null); // Clear any previous error messages
     } catch (error) {
+      // Handle errors if fetching search results fails
       setError("Error fetching search results. Please try again later.");
     }
-    setLoading(false);
   };
 
   return (
     <div>
-      <form onSubmit={handleSearchSubmit}>
-        <input
-          type="text"
-          placeholder="Enter search term"
-          value={term}
-          onChange={(e) => onSearch(e.target.value, media, country)}
-        />
-        <input
-          type="text"
-          placeholder="Enter media type (e.g., movie, music, etc.)"
-          value={media}
-          onChange={(e) => onSearch(term, e.target.value, country)}
-        />
-        <input
-          type="text"
-          placeholder="Enter country code (e.g., US, CA, etc.)"
-          value={country}
-          onChange={(e) => onSearch(term, media, e.target.value)}
-        />
-        <button type="submit" disabled={loading}>
-          {loading ? <div className="spinner"></div> : "Search"}
-        </button>
-      </form>
+      {/* Form to trigger search */}
+      <form onSubmit={handleSearchSubmit}></form>
+      {/* Display search results */}
+      {results.map((result) => (
+        <div key={result.trackId}>
+          {/* Display track name */}
+          <h2>{result.trackName}</h2>
+          {/* Display artist name */}
+          <p>Artist: {result.artistName}</p>
+          {/* Display album name */}
+          <p>Album: {result.collectionName}</p>
+          {/* Button to add the result to favorites */}
+          <button onClick={() => onAddToFavorites(result)}>
+            Add to Favorites
+          </button>
+        </div>
+      ))}
+      {/* Display error message if an error occurred */}
       {error && <div className="error-message">{error}</div>}
-      <div>
-        {results.map((result) => (
-          <div key={result.trackId}>
-            <h2>{result.trackName}</h2>
-            <p>Artist: {result.artistName}</p>
-            <p>Album: {result.collectionName}</p>
-            <button onClick={() => onAddToFavorites(result)}>
-              Add to Favorites
-            </button>
-          </div>
-        ))}
-      </div>
     </div>
   );
 };

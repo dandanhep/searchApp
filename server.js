@@ -1,42 +1,38 @@
-//Hi! can i please ask to not resubmit this task, i will accept the score as is. i just need to finish this task to graduate. thank you :)
 const express = require("express");
 const axios = require("axios");
 const helmet = require("helmet");
-const bodyParser = require("body-parser"); // Import bodyParser for parsing request bodies
+const bodyParser = require("body-parser");
+const cors = require("cors");
 
-// Creating an instance of the Express application
-const app = express();
-const port = 3001; // Setting the port number for the server to listen on
+const app = express(); // Create an Express application
+const port = process.env.PORT || 3001; // Define the port number
 
-// Using the Helmet middleware to enhance security
-app.use(helmet());
+app.use(helmet()); // Use Helmet middleware for security headers
+app.use(bodyParser.json()); // Use bodyParser middleware to parse JSON request bodies
 
-// Using bodyParser middleware to parse request bodies as JSON
-app.use(bodyParser.json());
+// Use the CORS middleware to handle Cross-Origin Resource Sharing
+app.use(cors());
 
-// Serving static files from the "client/build" directory
-app.use(express.static("client/build"));
+// Temporary data storage for favorites
+let favorites = [];
 
-// Defining the URL for the iTunes API
-const ITUNES_API_URL = "https://itunes.apple.com/search";
-
-// Handling POST requests to "/api/search" instead of GET
+// Define a route to handle the search API request
 app.post("/api/search", async (req, res) => {
-  // Extracting search parameters from the request body
   const { term, media, country } = req.body;
 
   try {
-    // Making a POST request to the iTunes API with the provided search parameters
-    const response = await axios.post(ITUNES_API_URL, {
-      term,
-      media,
-      country,
-    });
+    // iTunes API search URL
+    const searchURL = `https://itunes.apple.com/search?term=${encodeURIComponent(
+      term
+    )}&media=${media}&country=${country}`;
 
-    // Sending the API response data as a JSON response
+    // Make a GET request to the iTunes API using Axios
+    const response = await axios.get(searchURL);
+
+    // Respond with the fetched search results
     res.json(response.data);
   } catch (error) {
-    // Handling errors by logging the error message and sending an error JSON response
+    // Handle errors if fetching search results fails
     console.error("Error fetching search results:", error);
     res
       .status(500)
@@ -44,23 +40,31 @@ app.post("/api/search", async (req, res) => {
   }
 });
 
-let favorites = []; // Array to store favorite items
+// Route for adding an item to favorites
+app.post("/api/favorites/add", (req, res) => {
+  const { item } = req.body;
 
-// Handling POST requests to "/api/favorites"
-app.post("/api/favorites", (req, res) => {
-  const item = req.body; // Extracting the request body, assuming it contains an item to be added to favorites
-  favorites.push(item); // Adding the item to the favorites array
-  res.sendStatus(200); // Sending a success status code
+  favorites.push(item); // Add the item to the favorites list (in-memory storage)
+
+  res.json({ message: "Item added to favorites" });
 });
 
-// Handling DELETE requests to "/api/favorites/:id"
-app.delete("/api/favorites/:id", (req, res) => {
-  const itemId = req.params.id; // Extracting the ID parameter from the request URL
-  favorites = favorites.filter((item) => item.id !== itemId); // Filtering out the item with the matching ID from the favorites array
-  res.sendStatus(200); // Sending a success status code
+// Route for removing an item from favorites
+app.delete("/api/favorites/remove/:itemId", (req, res) => {
+  const itemIdToRemove = req.params.itemId;
+
+  favorites = favorites.filter(
+    (favorite) => favorite.trackId !== itemIdToRemove
+  );
+
+  res.json({ message: "Item removed from favorites" });
 });
 
-// Starting the server and logging a message indicating the server is running
+// Route for retrieving user's favorite list
+app.get("/api/favorites", (req, res) => {
+  res.json({ favorites });
+});
+
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });

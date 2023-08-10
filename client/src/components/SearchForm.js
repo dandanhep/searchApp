@@ -1,81 +1,45 @@
-import React, { useState } from "react"; // Importing React and useState hook from the "react" package
-import axios from "axios"; // Importing the Axios library for making HTTP requests
+import React, { useState } from "react";
 
+// SearchForm component takes in onSearch function as a prop
 function SearchForm({ onSearch }) {
-  const [term, setTerm] = useState(""); // Initializing the term state as an empty string using the useState hook
-  const [media, setMedia] = useState("all"); // Initializing the media state with a default value of "all"
-  const [country, setCountry] = useState("US"); // Initializing the country state with a default value of "US"
+  // State variables to manage search inputs
+  const [term, setTerm] = useState("");
+  const [media, setMedia] = useState("all");
+  const [country, setCountry] = useState("US");
 
-  const handleTermChange = (event) => {
-    setTerm(event.target.value);
-  };
-  // Function to handle changes in the search term input field
-  // Updates the term state with the value entered in the input field
-
-  const handleMediaChange = (event) => {
-    setMedia(event.target.value);
-  };
-  // Function to handle changes in the media selection dropdown
-  // Updates the media state with the selected value from the dropdown
-
-  const handleCountryChange = (event) => {
-    setCountry(event.target.value);
-  };
-  // Function to handle changes in the country selection dropdown
-  // Updates the country state with the selected value from the dropdown
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    // Prevents the default form submission behavior
-
-    axios
-      .get("/api/search", {
-        params: {
-          term,
-          media,
-          country,
-        },
-      })
-      .then((response) => {
-        onSearch(response.data.results);
-      })
-      .catch((error) => {
-        console.error("Error fetching search results:", error);
-      });
-  };
   // Function to handle form submission
-  // Sends a GET request to the "/api/search" endpoint with the search term, media, and country as query parameters
-  // Calls the onSearch function passed as a prop and passes the search results as an argument
-  // If an error occurs, the error is logged to the console
+  const handleSubmit = (event) => {
+    event.preventDefault(); // Prevents the default form submission behavior
+    // Call the onSearch function with search inputs
+    onSearch(term, media, country);
+  };
 
   return (
     <form onSubmit={handleSubmit}>
+      {/* Input field for search term */}
       <input
         type="text"
         value={term}
-        onChange={handleTermChange}
+        onChange={(e) => setTerm(e.target.value)} // Update term state on input change
         placeholder="Search term"
       />
-      <select value={media} onChange={handleMediaChange}>
-        {/* Options for media selection */}
+      {/* Dropdown for selecting media type */}
+      <select value={media} onChange={(e) => setMedia(e.target.value)}>
         <option value="all">All</option>
-        <option value="movie">Movie</option>
-        <option value="podcast">Podcast</option>
-        <option value="music">Music</option>
-        <option value="audiobook">Audiobook</option>
-        <option value="tvshow">TV Show</option>
+        <option value="iTunes">iTunes</option>
+        <option value="Books">Apple Book Store</option>
+        {/* Add other media types as options */}
       </select>
-      <select value={country} onChange={handleCountryChange}>
-        {/* Options for country selection */}
+      {/* Dropdown for selecting country */}
+      <select value={country} onChange={(e) => setCountry(e.target.value)}>
         <option value="US">United States</option>
         <option value="GB">United Kingdom</option>
+        {/* Add other country options as options */}
       </select>
+      {/* Submit button triggers the form submission */}
       <button type="submit">Search</button>
     </form>
   );
 }
-// Component for the search form
-// Renders a form with input fields for search term, media selection dropdown, and country selection dropdown
-// Calls the handleSubmit function when the form is submitted
 
 export default SearchForm;
