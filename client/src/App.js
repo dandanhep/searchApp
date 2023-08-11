@@ -52,14 +52,16 @@ function App() {
         onSearch={handleSearch}
       />
       <div className="results-container">
-        {/* SearchResults component to display search results */}
-        {/* Passes search term, media, country, and handleAddToFavorites function as props */}
+        {/* SearchResults component */}
         <SearchResults
           term={searchTerm}
           media={searchMedia}
           country={searchCountry}
           onAddToFavorites={handleAddToFavorites}
           onSearch={handleSearch}
+          setTerm={setSearchTerm}
+          setMedia={setSearchMedia}
+          setCountry={setSearchCountry}
         />
       </div>
       <h2>Favorites</h2>

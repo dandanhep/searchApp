@@ -2,7 +2,15 @@ import React, { useState } from "react";
 import axios from "axios";
 
 // SearchResults component takes in search inputs and onAddToFavorites function as props
-const SearchResults = ({ term, media, country, onAddToFavorites }) => {
+const SearchResults = ({
+  term,
+  media,
+  country,
+  onAddToFavorites,
+  setTerm,
+  setMedia,
+  setCountry,
+}) => {
   // State variables to manage search results and error messages
   const [error, setError] = useState(null);
   const [results, setResults] = useState([]);
@@ -30,23 +38,35 @@ const SearchResults = ({ term, media, country, onAddToFavorites }) => {
 
   return (
     <div>
-      {/* Form to trigger search */}
-      <form onSubmit={handleSearchSubmit}></form>
+      <form onSubmit={handleSearchSubmit}>
+        {/* Input fields and search button */}
+        <input
+          type="text"
+          placeholder="Search term"
+          value={term}
+          onChange={(e) => setTerm(e.target.value)}
+        />
+        <select value={media} onChange={(e) => setMedia(e.target.value)}>
+          {/* Dropdown options */}
+        </select>
+        <select value={country} onChange={(e) => setCountry(e.target.value)}>
+          {/* Dropdown options */}
+        </select>
+        <button type="submit">Search</button>
+      </form>
+
       {/* Display search results */}
       {results.map((result) => (
         <div key={result.trackId}>
-          {/* Display track name */}
           <h2>{result.trackName}</h2>
-          {/* Display artist name */}
           <p>Artist: {result.artistName}</p>
-          {/* Display album name */}
           <p>Album: {result.collectionName}</p>
-          {/* Button to add the result to favorites */}
           <button onClick={() => onAddToFavorites(result)}>
             Add to Favorites
           </button>
         </div>
       ))}
+
       {/* Display error message if an error occurred */}
       {error && <div className="error-message">{error}</div>}
     </div>
