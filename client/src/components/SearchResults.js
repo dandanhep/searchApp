@@ -58,6 +58,8 @@ const SearchResults = ({
       {/* Display search results */}
       {results.map((result) => (
         <div key={result.trackId}>
+          {" "}
+          {/* Provide a unique key */}
           <h2>{result.trackName}</h2>
           <p>Artist: {result.artistName}</p>
           <p>Album: {result.collectionName}</p>
