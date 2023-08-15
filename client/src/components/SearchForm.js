@@ -26,8 +26,15 @@ function SearchForm({ onSearch }) {
       {/* Dropdown for selecting media type */}
       <select value={media} onChange={(e) => setMedia(e.target.value)}>
         <option value="all">All</option>
-        <option value="iTunes">iTunes</option>
-        <option value="Books">Apple Book Store</option>
+        <option value="music">iTunes</option>
+        <option value="ebook">Apple Book Store</option>
+        <option value="movie">Movie</option>
+        <option value="podcast">Podcast</option>
+        <option value="audiobook">Audiobook</option>
+        <option value="tvShow">TV Show</option>
+        <option value="shortFilm">Short Film</option>
+        <option value="musicVideo">TV Show</option>
+        <option value="software">Short Film</option>
         {/* Add other media types as options */}
       </select>
       {/* Dropdown for selecting country */}

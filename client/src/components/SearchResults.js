@@ -18,6 +18,7 @@ const SearchResults = ({
   // Function to handle search form submission
   const handleSearchSubmit = async (e) => {
     e.preventDefault(); // Prevents default form submission behavior
+    setResults([]); // Clear previous results
 
     try {
       // Make a POST request to the backend API to fetch search results
@@ -39,7 +40,6 @@ const SearchResults = ({
   return (
     <div>
       <form onSubmit={handleSearchSubmit}>
-        {/* Input fields and search button */}
         <input
           type="text"
           placeholder="Search term"
@@ -47,10 +47,22 @@ const SearchResults = ({
           onChange={(e) => setTerm(e.target.value)}
         />
         <select value={media} onChange={(e) => setMedia(e.target.value)}>
-          {/* Dropdown options */}
+          <option value="all">All</option>
+          <option value="music">iTunes</option>
+          <option value="ebook">Apple Book Store</option>
+          <option value="movie">Movie</option>
+          <option value="podcast">Podcast</option>
+          <option value="audiobook">Audiobook</option>
+          <option value="tvShow">TV Show</option>
+          <option value="shortFilm">Short Film</option>
+          <option value="musicVideo">TV Show</option>
+          <option value="software">Short Film</option>
+          {/* Add other media options */}
         </select>
         <select value={country} onChange={(e) => setCountry(e.target.value)}>
-          {/* Dropdown options */}
+          <option value="US">United States</option>
+          <option value="GB">United Kingdom</option>
+          {/* Add other country options */}
         </select>
         <button type="submit">Search</button>
       </form>
@@ -58,8 +70,6 @@ const SearchResults = ({
       {/* Display search results */}
       {results.map((result) => (
         <div key={result.trackId}>
-          {" "}
-          {/* Provide a unique key */}
           <h2>{result.trackName}</h2>
           <p>Artist: {result.artistName}</p>
           <p>Album: {result.collectionName}</p>

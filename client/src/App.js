@@ -50,6 +50,9 @@ function App() {
         media={searchMedia}
         country={searchCountry}
         onSearch={handleSearch}
+        setTerm={setSearchTerm}
+        setMedia={setSearchMedia}
+        setCountry={setSearchCountry}
       />
       <div className="results-container">
         {/* SearchResults component */}
